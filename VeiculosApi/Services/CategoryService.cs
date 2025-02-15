@@ -54,7 +54,7 @@ public class CategoryService
         var result = new PageResultResponse<Category>
         {
             TotalRecords = totalRecords,
-            Data = categories
+            Data = categories,
         };
 
         return result;

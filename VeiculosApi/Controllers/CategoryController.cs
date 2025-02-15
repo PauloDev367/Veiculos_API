@@ -1,3 +1,4 @@
+using Azure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using VeiculosApi.Http.Request;
@@ -63,5 +64,21 @@ public class CategoryController : ControllerBase
             Data = category
         }
         );
+    }
+
+
+    [HttpGet]
+    public async Task<IActionResult> GetAllAsync(
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 10
+    ){
+        var data = await _service.GetAllAsync(page, pageSize);
+
+        return Ok(new DefaultControllerResponse<PageResultResponse<Category>>
+        {
+            Status = 200,
+            Message = "Categories was foundend",
+            Data = data
+        });
     }
 }
