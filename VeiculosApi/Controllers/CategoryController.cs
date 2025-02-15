@@ -1,6 +1,7 @@
 using Azure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using VeiculosApi.Exceptions;
 using VeiculosApi.Http.Request;
 using VeiculosApi.Http.Response;
 using VeiculosApi.Models;
@@ -71,7 +72,8 @@ public class CategoryController : ControllerBase
     public async Task<IActionResult> GetAllAsync(
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 10
-    ){
+    )
+    {
         var data = await _service.GetAllAsync(page, pageSize);
 
         return Ok(new DefaultControllerResponse<PageResultResponse<Category>>
@@ -80,5 +82,27 @@ public class CategoryController : ControllerBase
             Message = "Categories was foundend",
             Data = data
         });
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteAsync(Guid id)
+    {
+        try
+        {
+            await _service.DeleteAsync(id);
+            return Ok(new DefaultControllerResponse<string>
+            {
+                Status = 200,
+                Message = "Category removed successfully",
+            });
+        }
+        catch (ModelNotFoundException ex)
+        {
+            return NotFound(new DefaultControllerResponse<string>
+            {
+                Status = 404,
+                Message = ex.Message,
+            });
+        }
     }
 }
