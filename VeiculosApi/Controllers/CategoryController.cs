@@ -105,4 +105,27 @@ public class CategoryController : ControllerBase
             });
         }
     }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateAsync(Guid id, [FromBody] UpdateCategoryRequest request)
+    {
+        try
+        {
+            var updated = await _service.UpdateAsync(id, request);
+            return Ok(new DefaultControllerResponse<Category>
+            {
+                Status = 200,
+                Message = "Category updated successfully",
+                Data = updated
+            });
+        }
+        catch (ModelNotFoundException ex)
+        {
+            return NotFound(new DefaultControllerResponse<string>
+            {
+                Status = 404,
+                Message = ex.Message,
+            });
+        }
+    }
 }
