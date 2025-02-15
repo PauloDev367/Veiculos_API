@@ -77,5 +77,16 @@ public class CategoryServiceTest
         var categories = await _service.GetAllAsync(1, 1);
         Assert.Equal(categories.TotalRecords, 1);
     }
+    [Fact]
+    public async Task ShouldGetAllCategoriesWithPageSizeEqualsTenIfPassedPageSizeIsBiggerThenThen()
+    {
+        var request = new CreateCategoryRequest { Name = "Test Category" };
+        await _service.CreateAsync(request);
+
+        var pageSize = 11;
+        var categories = await _service.GetAllAsync(1, pageSize);
+        Assert.Equal(categories.PageSize, 10);
+    }
+
 
 }
