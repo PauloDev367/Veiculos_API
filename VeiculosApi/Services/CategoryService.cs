@@ -44,6 +44,8 @@ public class CategoryService
 
     public async Task<PageResultResponse<Category>> GetAllAsync(int pageNumber, int pageSize)
     {
+        if (pageSize > 10) pageSize = 10;
+
         var totalRecords = await _context.Categories.CountAsync();
         var categories = await _context.Categories
             .AsNoTracking()
@@ -55,6 +57,8 @@ public class CategoryService
         {
             TotalRecords = totalRecords,
             Data = categories,
+            Page = pageNumber,
+            PageSize = pageSize
         };
 
         return result;
