@@ -55,8 +55,6 @@ public class CategoryServiceTest
         var request = new CreateCategoryRequest { Name = "Test Category" };
         var category = await _service.CreateAsync(request);
 
-        await _memoryDbContext.SaveChangesAsync();
-
         var retrievedCategory = await _service.GetOneAsync(category.Id);
 
         Assert.NotNull(retrievedCategory);
@@ -67,6 +65,17 @@ public class CategoryServiceTest
     {
         var retrievedCategory = await _service.GetOneAsync(Guid.NewGuid());
         Assert.Null(retrievedCategory);
+    }
+
+
+    [Fact]
+    public async Task ShouldGetAllCategories()
+    {
+        var request = new CreateCategoryRequest { Name = "Test Category" };
+        await _service.CreateAsync(request);
+
+        var categories = await _service.GetAllAsync(1, 1);
+        Assert.Equal(categories.TotalRecords, 1);
     }
 
 }

@@ -1,9 +1,11 @@
 using System;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using VeiculosApi.Data;
 using VeiculosApi.Exceptions;
 using VeiculosApi.Http.Request;
+using VeiculosApi.Http.Response;
 using VeiculosApi.Models;
 
 namespace VeiculosApi.Services;
@@ -39,4 +41,23 @@ public class CategoryService
             .AsNoTracking()
             .FirstOrDefaultAsync(c => c.Id == id);
     }
+
+    public async Task<PageResultResponse<Category>> GetAllAsync(int pageNumber, int pageSize)
+    {
+        var totalRecords = await _context.Categories.CountAsync();
+        var categories = await _context.Categories
+            .AsNoTracking()
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        var result = new PageResultResponse<Category>
+        {
+            TotalRecords = totalRecords,
+            Data = categories
+        };
+
+        return result;
+    }
+
 }
