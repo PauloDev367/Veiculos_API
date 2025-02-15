@@ -77,6 +77,7 @@ public class CategoryServiceTest
         var categories = await _service.GetAllAsync(1, 1);
         Assert.Equal(categories.TotalRecords, 1);
     }
+
     [Fact]
     public async Task ShouldGetAllCategoriesWithPageSizeEqualsTenIfPassedPageSizeIsBiggerThenThen()
     {
@@ -88,5 +89,27 @@ public class CategoryServiceTest
         Assert.Equal(categories.PageSize, 10);
     }
 
+    [Fact]
+    public async Task ShouldDeleteACategoryIfItExists()
+    {
+        var request = new CreateCategoryRequest { Name = "Test Category" };
+        var created = await _service.CreateAsync(request);
+
+        var category = await _service.GetOneAsync(created.Id);
+        await _service.DeleteAsync(category.Id);
+
+        var deleted = await _service.GetOneAsync(created.Id);
+        Assert.Null(deleted);
+    }
+
+
+    [Fact]
+    public async Task ShouldNotDeleteACategoryIfItExists()
+    {
+        var exception = await Assert.ThrowsAsync<ModelNotFoundException>(() => _service.DeleteAsync(Guid.NewGuid()));
+        var expectedMessage = "Category was not founded";
+
+        Assert.Equal(expectedMessage, exception.Message);
+    }
 
 }

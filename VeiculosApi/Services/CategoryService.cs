@@ -64,4 +64,15 @@ public class CategoryService
         return result;
     }
 
+    public async Task DeleteAsync(Guid id)
+    {
+        var category = await _context.Categories
+            .FirstOrDefaultAsync(c => c.Id == id);
+
+        if (category == null)
+            throw new ModelNotFoundException("Category was not founded");
+
+        _context.Remove(category);
+        await _context.SaveChangesAsync();
+    }
 }
