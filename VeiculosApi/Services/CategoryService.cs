@@ -75,4 +75,20 @@ public class CategoryService
         _context.Remove(category);
         await _context.SaveChangesAsync();
     }
+
+    public async Task<Category> UpdateAsync(Guid id, UpdateCategoryRequest request)
+    {
+        var category = await _context.Categories
+           .FirstOrDefaultAsync(c => c.Id == id);
+
+        if (category == null)
+            throw new ModelNotFoundException("Category was not founded");
+
+        category.Name = !request.Name.IsNullOrEmpty() ? request.Name : category.Name;
+        _context.Update(category);
+
+        await _context.SaveChangesAsync();
+        return category;
+    }
+
 }
