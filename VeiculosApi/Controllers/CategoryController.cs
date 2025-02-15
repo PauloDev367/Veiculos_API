@@ -40,4 +40,27 @@ public class CategoryController : ControllerBase
             );
         }
     }
+
+    [Route("{id}")]
+    public async Task<IActionResult> GetOneAsync(Guid id)
+    {
+        var category = await _service.GetOneAsync(id);
+        if (category == null)
+        {
+            return NotFound(new DefaultControllerResponse<string>
+            {
+                Status = 400,
+                Message = "Category was not foundend"
+            }
+            );
+        }
+
+        return Ok(new DefaultControllerResponse<Category>
+        {
+            Status = 200,
+            Message = "Category was foundend",
+            Data = category
+        }
+        );
+    }
 }
