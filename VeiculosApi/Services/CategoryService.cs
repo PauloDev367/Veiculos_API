@@ -1,4 +1,5 @@
 using System;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using VeiculosApi.Data;
 using VeiculosApi.Exceptions;
@@ -17,7 +18,8 @@ public class CategoryService
 
     public async Task<Category?> CreateAsync(CreateCategoryRequest request)
     {
-        if(request.Name.IsNullOrEmpty()){
+        if (request.Name.IsNullOrEmpty())
+        {
             throw new EmptyValueException("You need to informate the name to continue");
         }
 
@@ -29,5 +31,12 @@ public class CategoryService
         await _context.Categories.AddAsync(category);
         await _context.SaveChangesAsync();
         return category;
+    }
+
+    public async Task<Category?> GetOneAsync(Guid id)
+    {
+        return await _context.Categories
+            .AsNoTracking()
+            .FirstOrDefaultAsync(c => c.Id == id);
     }
 }
