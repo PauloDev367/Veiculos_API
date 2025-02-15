@@ -17,6 +17,7 @@ public class CategoryController : ControllerBase
         _service = service;
     }
 
+    [HttpPost]
     public async Task<IActionResult> CreateAsync([FromBody] CreateCategoryRequest request)
     {
         try
@@ -41,7 +42,7 @@ public class CategoryController : ControllerBase
         }
     }
 
-    [Route("{id}")]
+    [HttpGet("{id}")]
     public async Task<IActionResult> GetOneAsync(Guid id)
     {
         var category = await _service.GetOneAsync(id);
