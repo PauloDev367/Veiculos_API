@@ -6,13 +6,12 @@ namespace VeiculosApi.Extensions;
 
 public static class DbConfigurationExtension
 {
-    public static void ConfigureDbContext(this IServiceCollection service, IConfiguration configuration)
+    public static void ConfigureDbContext(this WebApplicationBuilder builder)
     {
-        string connString = configuration.GetConnectionString("SqlServer");
-        service.AddDbContext<AppDbContext>(opt =>
+        string connString = builder.Configuration.GetConnectionString("SqlServer");
+        builder.Services.AddDbContext<AppDbContext>(opt =>
         {
             opt.UseSqlServer(connString);
         });
     }
-
 }
