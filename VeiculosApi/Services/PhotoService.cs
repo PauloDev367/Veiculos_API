@@ -1,4 +1,5 @@
 using System;
+using Microsoft.EntityFrameworkCore;
 using VeiculosApi.Data;
 using VeiculosApi.Http.Request;
 using VeiculosApi.Models;
@@ -30,4 +31,26 @@ public class PhotoService
         await _context.SaveChangesAsync();
         return createdItems;
     }
+
+    public async Task RemoveVehiclePhotosAsync(List<Guid> ids, Guid vehicleId)
+    {
+        foreach (var photoId in ids)
+        {
+            var photo = await _context.Photos
+                .FirstOrDefaultAsync(x => x.Id.Equals(photoId));
+            if (photo != null)
+            {
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", photo.Path);
+                if (System.IO.File.Exists(filePath))
+                {
+                    System.IO.File.Delete(filePath);
+                }
+
+                _context.Remove(photo);
+            }
+        }
+
+        await _context.SaveChangesAsync();
+    }
+
 }
