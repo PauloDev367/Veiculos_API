@@ -31,19 +31,26 @@ public class PhotoService
         await _context.SaveChangesAsync();
         return createdItems;
     }
-
     public async Task RemoveVehiclePhotosAsync(List<Guid> ids, Guid vehicleId)
     {
         foreach (var photoId in ids)
         {
             var photo = await _context.Photos
                 .FirstOrDefaultAsync(x => x.Id.Equals(photoId));
+
             if (photo != null)
             {
-                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", photo.Path);
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", photo.Path.TrimStart('/'));
+                Console.WriteLine($"Tentando deletar: {filePath}");
+
                 if (System.IO.File.Exists(filePath))
                 {
+                    Console.WriteLine($"Arquivo encontrado, deletando...");
                     System.IO.File.Delete(filePath);
+                }
+                else
+                {
+                    Console.WriteLine($"Arquivo não encontrado: {filePath}");
                 }
 
                 _context.Remove(photo);
@@ -52,5 +59,6 @@ public class PhotoService
 
         await _context.SaveChangesAsync();
     }
+
 
 }

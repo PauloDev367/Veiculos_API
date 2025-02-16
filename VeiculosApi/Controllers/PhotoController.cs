@@ -32,4 +32,15 @@ public class PhotoController : ControllerBase
             Data = created
         });
     }
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> RemoveAsync(Guid id, [FromBody] RemovePhotoRequest request)
+    {
+        await _photoService.RemoveVehiclePhotosAsync(request.Ids, id);
+
+        return Ok(new DefaultControllerResponse<string>
+        {
+            Status = 200,
+            Message = "Photos removed successfully",
+        });
+    }
 }
