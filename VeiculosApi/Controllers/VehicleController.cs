@@ -49,4 +49,18 @@ public class VehicleController : ControllerBase
             Data = vehicle
         });
     }
+    [HttpGet]
+    public async Task<IActionResult> GetAllAsync(
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 10
+    )
+    { 
+        var data = await _service.GetAllAsync(page, pageSize);
+        return Ok(new DefaultControllerResponse<PageResultResponse<Vehicle>>
+        {
+            Status = 200,
+            Message = "Vehicles was founded",
+            Data = data
+        });
+    }
 }
