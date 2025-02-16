@@ -28,6 +28,25 @@ public class VehicleController : ControllerBase
             Message = "Vehicle created successfully",
             Data = created,
         });
+    }
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetOneAsync(Guid id)
+    {
+        var vehicle = await _service.GetOneAsync(id);
+        if (vehicle == null)
+        {
+            return NotFound(new DefaultControllerResponse<string>
+            {
+                Status = 404,
+                Message = "Vehicle was not funded"
+            });
+        }
 
+        return Ok(new DefaultControllerResponse<Vehicle>
+        {
+            Status = 200,
+            Message = "Vehicle was founded",
+            Data = vehicle
+        });
     }
 }
