@@ -180,4 +180,61 @@ public class VehicleServiceTest
         var expectedMessage = "Vehicle not exists";
         Assert.Equal(expectedMessage, exception.Message);
     }
+
+    [Fact]
+    public async Task ShouldUpdateVehicleIfAllDataIsCorrect()
+    {
+        var vehicleRequest = new CreateVehicleRequest
+        {
+            Name = "Name",
+            Description = "Description",
+            Year = "Year",
+            Color = "Color",
+            FuelType = "FuelType",
+            Price = 200,
+            CategoryId = Guid.NewGuid(),
+        };
+
+        var created = await _service.CreateAsync(vehicleRequest);
+        var newGuid = Guid.NewGuid();
+        var updateRequest = new UpdateVehicleRequest
+        {
+            Name = "New Name",
+            Description = "New Description",
+            Year = "New Year",
+            Color = "New Color",
+            FuelType = "New FuelType",
+            Price = 300,
+            CategoryId = newGuid,
+        };
+
+        var update = await _service.UpdateAsync(created.Id, updateRequest);
+        Assert.Equal(update.Name, updateRequest.Name);
+        Assert.Equal(update.Description, updateRequest.Description);
+        Assert.Equal(update.Year, updateRequest.Year);
+        Assert.Equal(update.Color, updateRequest.Color);
+        Assert.Equal(update.FuelType, updateRequest.FuelType);
+        Assert.Equal(update.Price, updateRequest.Price);
+        Assert.Equal(update.CategoryId, updateRequest.CategoryId);
+    }
+
+
+    [Fact]
+    public async Task ShouldNotUpdateIfVehicleIsNotFound()
+    {
+        var updateRequest = new UpdateVehicleRequest
+        {
+            Name = "New Name",
+            Description = "New Description",
+            Year = "New Year",
+            Color = "New Color",
+            FuelType = "New FuelType",
+            Price = 300,
+            CategoryId = Guid.NewGuid(),
+        };
+
+        var exception = await Assert.ThrowsAsync<ModelNotFoundException>(() => _service.UpdateAsync(updateRequest.CategoryId, updateRequest));
+        var expectedMessage = "Vehicle not exists";
+        Assert.Equal(expectedMessage, exception.Message);
+    }
 }

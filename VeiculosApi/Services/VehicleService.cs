@@ -102,9 +102,29 @@ public class VehicleService
         var vehicle = await _context.Vehicles
             .FirstOrDefaultAsync(x => x.Id.Equals(id));
 
-        if(vehicle == null) throw new ModelNotFoundException("Vehicle not exists");
+        if (vehicle == null) throw new ModelNotFoundException("Vehicle not exists");
 
         _context.Vehicles.Remove(vehicle);
         await _context.SaveChangesAsync();
+    }
+
+    public async Task<Vehicle> UpdateAsync(Guid id, UpdateVehicleRequest request)
+    {
+
+        var vehicle = await _context.Vehicles
+            .FirstOrDefaultAsync(x => x.Id.Equals(id));
+
+        if (vehicle == null) throw new ModelNotFoundException("Vehicle not exists");
+        vehicle.Name = !request.Name.IsNullOrEmpty() ? request.Name : vehicle.Name;
+        vehicle.Description = !request.Description.IsNullOrEmpty() ? request.Description : vehicle.Description;
+        vehicle.Year = !request.Year.IsNullOrEmpty() ? request.Year : vehicle.Year;
+        vehicle.Color = !request.Color.IsNullOrEmpty() ? request.Color : vehicle.Color;
+        vehicle.FuelType = !request.FuelType.IsNullOrEmpty() ? request.FuelType : vehicle.FuelType;
+        vehicle.Price = request.Price >= 0 ? request.Price : vehicle.Price;
+        vehicle.CategoryId = !(request.CategoryId == Guid.Empty) ? request.CategoryId : vehicle.CategoryId;
+
+        _context.Vehicles.Update(vehicle);
+        await _context.SaveChangesAsync();
+        return vehicle;
     }
 }
