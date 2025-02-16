@@ -1,4 +1,5 @@
 using System;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using VeiculosApi.Data;
 using VeiculosApi.Exceptions;
@@ -62,5 +63,14 @@ public class VehicleService
         await _context.SaveChangesAsync();
 
         return vehicle;
+    }
+
+    public async Task<Vehicle?> GetOneAsync(Guid id)
+    {
+        return await _context.Vehicles
+            .AsNoTracking()
+            .Include(x => x.Variations)
+            .Include(x => x.Photos)
+            .FirstOrDefaultAsync(x => x.Id.Equals(id));
     }
 }

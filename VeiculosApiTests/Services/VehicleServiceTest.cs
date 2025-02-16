@@ -81,4 +81,30 @@ public class VehicleServiceTest
         Assert.NotNull(created.Id);
     }
 
+    [Fact]
+    public async Task ShouldGetOneVehicleIfItExists()
+    {
+        var vehicleRequest = new CreateVehicleRequest
+        {
+            Name = "Name",
+            Description = "Description",
+            Year = "Year",
+            Color = "Color",
+            FuelType = "FuelType",
+            Price = 200,
+            CategoryId = Guid.NewGuid(),
+        };
+
+        var created = await _service.CreateAsync(vehicleRequest);
+        var search = await _service.GetOneAsync(created.Id);
+
+        Assert.NotNull(search);
+    }
+    [Fact]
+    public async Task ShouldNotGetOneVehicleIfItNotExists()
+    {
+        var search = await _service.GetOneAsync(Guid.NewGuid());
+        Assert.Null(search);
+    }
+
 }
