@@ -68,7 +68,6 @@ public class VehicleController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteAsync(Guid id)
     {
-
         try
         {
             await _service.DeleteOneAsync(id);
@@ -87,4 +86,28 @@ public class VehicleController : ControllerBase
             });
         }
     }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateAsync(Guid id, [FromBody] UpdateVehicleRequest request)
+    {
+        try
+        {
+            var data = await _service.UpdateAsync(id, request);
+            return Ok(new DefaultControllerResponse<Vehicle>
+            {
+                Status = 200,
+                Message = "Vehicles updaated successfully",
+                Data = data
+            });
+        }
+        catch (ModelNotFoundException ex)
+        {
+            return NotFound(new DefaultControllerResponse<string>
+            {
+                Status = 404,
+                Message = ex.Message,
+            });
+        }
+    }
+
 }

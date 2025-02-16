@@ -233,7 +233,7 @@ public class VehicleServiceTest
             CategoryId = Guid.NewGuid(),
         };
 
-        var exception = await Assert.ThrowsAsync<ModelNotFoundException>(() => _service.UpdateAsync(updateRequest.CategoryId, updateRequest));
+        var exception = await Assert.ThrowsAsync<ModelNotFoundException>(() => _service.UpdateAsync(Guid.NewGuid(), updateRequest));
         var expectedMessage = "Vehicle not exists";
         Assert.Equal(expectedMessage, exception.Message);
     }
