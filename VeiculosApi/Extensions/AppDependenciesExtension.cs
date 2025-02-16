@@ -9,5 +9,6 @@ public static class AppDependenciesExtension
     {
         builder.Services.AddTransient<CategoryService>();
         builder.Services.AddTransient<VehicleService>();
+        builder.Services.AddTransient<PhotoService>();
     }
 }
