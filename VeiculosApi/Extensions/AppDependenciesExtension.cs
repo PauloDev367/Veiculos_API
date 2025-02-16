@@ -8,5 +8,6 @@ public static class AppDependenciesExtension
     public static void ConfigureDependencies(this WebApplicationBuilder builder)
     {
         builder.Services.AddTransient<CategoryService>();
+        builder.Services.AddTransient<VehicleService>();
     }
 }
