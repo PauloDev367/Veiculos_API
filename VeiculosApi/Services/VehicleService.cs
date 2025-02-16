@@ -96,4 +96,15 @@ public class VehicleService
 
         return result;
     }
+
+    public async Task DeleteOneAsync(Guid id)
+    {
+        var vehicle = await _context.Vehicles
+            .FirstOrDefaultAsync(x => x.Id.Equals(id));
+
+        if(vehicle == null) throw new ModelNotFoundException("Vehicle not exists");
+
+        _context.Vehicles.Remove(vehicle);
+        await _context.SaveChangesAsync();
+    }
 }

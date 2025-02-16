@@ -152,4 +152,32 @@ public class VehicleServiceTest
         var totalExpected = 10;
         Assert.Equal(totalExpected, search.PageSize);
     }
+
+    [Fact]
+    public async Task ShouldDeleteAVehicleIfItExists()
+    {
+        var vehicleRequest = new CreateVehicleRequest
+        {
+            Name = "Name",
+            Description = "Description",
+            Year = "Year",
+            Color = "Color",
+            FuelType = "FuelType",
+            Price = 200,
+            CategoryId = Guid.NewGuid(),
+        };
+
+        var created = await _service.CreateAsync(vehicleRequest);
+        await _service.DeleteOneAsync(created.Id);
+
+        var search = await _service.GetOneAsync(created.Id);
+        Assert.Null(search);
+    }
+    [Fact]
+    public async Task ShouldNotDeleteAVehicleIfItNotExists()
+    {
+        var exception = await Assert.ThrowsAsync<ModelNotFoundException>(() => _service.DeleteOneAsync(Guid.NewGuid()));
+        var expectedMessage = "Vehicle not exists";
+        Assert.Equal(expectedMessage, exception.Message);
+    }
 }
