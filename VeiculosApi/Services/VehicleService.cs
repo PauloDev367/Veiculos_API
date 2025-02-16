@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using VeiculosApi.Data;
 using VeiculosApi.Exceptions;
 using VeiculosApi.Http.Request;
+using VeiculosApi.Http.Response;
 using VeiculosApi.Models;
 
 namespace VeiculosApi.Services;
@@ -72,5 +73,27 @@ public class VehicleService
             .Include(x => x.Variations)
             .Include(x => x.Photos)
             .FirstOrDefaultAsync(x => x.Id.Equals(id));
+    }
+
+    public async Task<PageResultResponse<Vehicle>> GetAllAsync(int pageNumber, int pageSize)
+    {
+        if (pageSize > 10) pageSize = 10;
+
+        var totalRecords = await _context.Categories.CountAsync();
+        var vehicles = await _context.Vehicles
+            .AsNoTracking()
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        var result = new PageResultResponse<Vehicle>
+        {
+            TotalRecords = totalRecords,
+            Data = vehicles,
+            Page = pageNumber,
+            PageSize = pageSize
+        };
+
+        return result;
     }
 }

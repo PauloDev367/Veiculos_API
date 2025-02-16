@@ -107,4 +107,49 @@ public class VehicleServiceTest
         Assert.Null(search);
     }
 
+    [Fact]
+    public async Task ShouldGetAllVehicles()
+    {
+        var vehicleRequest = new CreateVehicleRequest
+        {
+            Name = "Name",
+            Description = "Description",
+            Year = "Year",
+            Color = "Color",
+            FuelType = "FuelType",
+            Price = 200,
+            CategoryId = Guid.NewGuid(),
+        };
+
+        await _service.CreateAsync(vehicleRequest);
+        var pageNumber = 1;
+        var perPage = 1;
+
+        var search = await _service.GetAllAsync(pageNumber, perPage);
+        var totalExpected = 1;
+        Assert.Equal(totalExpected, search.Data.Count());
+    }
+
+    [Fact]
+    public async Task ShouldSetPerPageEqual10IfPassedPerPageIsBiggerThan10WhenAllVehicles()
+    {
+        var vehicleRequest = new CreateVehicleRequest
+        {
+            Name = "Name",
+            Description = "Description",
+            Year = "Year",
+            Color = "Color",
+            FuelType = "FuelType",
+            Price = 200,
+            CategoryId = Guid.NewGuid(),
+        };
+
+        await _service.CreateAsync(vehicleRequest);
+        var pageNumber = 1;
+        var perPage = 11;
+
+        var search = await _service.GetAllAsync(pageNumber, perPage);
+        var totalExpected = 10;
+        Assert.Equal(totalExpected, search.PageSize);
+    }
 }
