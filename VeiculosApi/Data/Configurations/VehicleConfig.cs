@@ -16,7 +16,7 @@ public class VehicleConfig : IEntityTypeConfiguration<Vehicle>
             .IsRequired();
 
         builder.Property(x => x.Name)
-            .HasColumnType("VARCHAR")
+            .HasColumnType("VARCHAR(255)")
             .IsRequired();
 
         builder.Property(x => x.Description)
@@ -24,15 +24,15 @@ public class VehicleConfig : IEntityTypeConfiguration<Vehicle>
             .IsRequired();
 
         builder.Property(x => x.Year)
-            .HasColumnType("VARCHAR")
+            .HasColumnType("VARCHAR(255)")
             .IsRequired();
 
         builder.Property(x => x.Color)
-            .HasColumnType("VARCHAR")
+            .HasColumnType("VARCHAR(255)")
             .IsRequired();
 
         builder.Property(x => x.FuelType)
-            .HasColumnType("VARCHAR")
+            .HasColumnType("VARCHAR(255)")
             .IsRequired();
             
         builder.Property(x => x.Price)
